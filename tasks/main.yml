@@ -1,9 +1,5 @@
 ---
 - include_tasks: setup-RedHat.yml
-  when: ansible_os_family == 'RedHat'
-
-- include_tasks: setup-Debian.yml
-  when: ansible_os_family == 'Debian'
 
 - name: Install Docker.
   package:
@@ -16,6 +12,23 @@
     name: docker
     state: "{{ docker_service_state }}"
     enabled: "{{ docker_service_enabled }}"
+
+- name: Create docker service override dir
+  when: http_proxy|default('')
+  file:
+    dest: /etc/systemd/system/docker.service.d
+    state: directory
+
+- name: Install systemd override
+  when: http_proxy|default('')
+  copy:
+    content: |
+      [Service]
+      Environment=http_proxy={{http_proxy}}
+      Environment=https_proxy={{https_proxy}}
+      Environment=no_proxy={{no_proxy}}
+    dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+  notify: restart docker
 
 - name: Ensure handlers are notified now to avoid firewall conflicts.
   meta: flush_handlers
