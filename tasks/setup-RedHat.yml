@@ -1,12 +1,12 @@
 ---
-- name: Ensure old versions of Docker are not installed.
-  package:
-    name:
-      - docker
-      - docker-common
-      - docker-ce
-      - docker-ee
-    state: absent
+#- name: Ensure old versions of Docker are not installed.
+#  package:
+#    name:
+#      - docker
+#      - docker-common
+#      - docker-ce
+#      - docker-ee
+#    state: absent
 
 - name: Configure OracleLinux addons repo.
   when: ansible_distribution == "OracleLinux"

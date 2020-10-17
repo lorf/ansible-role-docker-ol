@@ -7,6 +7,13 @@ docker_service_state: started
 docker_service_enabled: true
 docker_restart_handler_state: restarted
 
+# Docker configuration
+docker_config: {}
+docker_data_root: ~
+docker_registry_mirrors: []
+docker_insecure_registries: []
+docker_address_pools: {}
+
 # Docker Compose options.
 docker_install_compose: true
 docker_compose_version: "1.26.0"

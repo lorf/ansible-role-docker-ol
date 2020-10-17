@@ -1,0 +1,25 @@
+{% set config = docker_config|default({}) %}
+{% if docker_data_root|default('') %}
+{%   set _ = config.update({"data-root": docker_data_root}) %}
+{% endif %}
+{% if docker_address_pools|default({}) %}
+{%   set _ = config.update({"default-address-pools": [
+       {
+         "scope": "local",
+         "base":  docker_address_pools.local.base|default('172.29.128.0/18'),
+         "size":  docker_address_pools.local.size|default(26)
+       },
+       {
+         "scope": "global",
+         "base":  docker_address_pools.global.base|default('172.29.192.0/18'),
+         "size":  docker_address_pools.global.size|default(26)
+       }
+     ]}) %}
+{% endif %}
+{% if docker_registry_mirrors|default([]) %}
+{%   set _ = config.update({"registry-mirrors": docker_registry_mirrors}) %}
+{% endif %}
+{% if docker_insecure_registries|default([]) %}
+{%   set _ = config.update({"insecure-registries": docker_insecure_registries}) %}
+{% endif %}
+{{ config | to_nice_json }}
