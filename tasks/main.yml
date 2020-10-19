@@ -7,13 +7,6 @@
     state: "{{ docker_package_state }}"
   notify: restart docker
 
-- name: Install docker config
-  template:
-    src: docker-daemon.json.j2
-    dest: /etc/docker/daemon.json
-    backup: yes
-  notify: restart docker
-
 - name: Ensure Docker is started and enabled at boot.
   service:
     name: docker
@@ -35,6 +28,13 @@
       Environment=https_proxy={{https_proxy}}
       Environment=no_proxy={{no_proxy}}
     dest: /etc/systemd/system/docker.service.d/http-proxy.conf
+  notify: restart docker
+
+- name: Install docker config
+  template:
+    src: docker-daemon.json.j2
+    dest: /etc/docker/daemon.json
+    backup: yes
   notify: restart docker
 
 - name: Ensure handlers are notified now to avoid firewall conflicts.
